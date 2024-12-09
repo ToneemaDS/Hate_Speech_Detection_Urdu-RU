@@ -1,0 +1,7 @@
+dataset_path: "D:\Thesis2\Dataset\purutt.xlsx"
+output_path: "results/classified_comments.csv"
+log_file: "logs/app.log"
+batch_size: 100
+model_name: "llama-2-13b"
+base_url: "http://localhost:11434"
+temperature: 0.7
