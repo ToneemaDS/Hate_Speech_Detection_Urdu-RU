@@ -2,7 +2,7 @@ DATASET_PATH: "D:\\Thesis2\\Dataset\\purutt_reduced.xlsx"
 OUTPUT_PATH: "D:\\Thesis2\\Results\\classified_comments.csv"
 LOG_FILE: "D:\\Thesis2\\logs\\app.log"
 
-batch_size: 100
+batch_size: 500
 model_name: "llama3.2"
 base_url: "http://localhost:11434"
 temperature: 0.7
