@@ -16,7 +16,7 @@ logs/
 
 # Dataset and Results
 data/*.xlsx
-results/*.csv
+#results/*.csv
 
 # OS-specific files
 .DS_Store
