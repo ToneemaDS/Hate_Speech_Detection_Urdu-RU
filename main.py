@@ -42,7 +42,7 @@ def main():
     logging.info(f"DataFrame shape before saving: {df.shape}")
 
     # Save results
-    output_path = config["output_path"]
+    output_path = config["OUTPUT_PATH"]
     df.to_csv(output_path, index=False)
     logging.info(f"Results saved to {output_path}")
 
