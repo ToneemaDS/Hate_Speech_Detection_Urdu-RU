@@ -1,0 +1,23 @@
+# Python Bytecode Files
+__pycache__/
+*.pyc
+
+# Virtual Environment
+hate_speech_env/
+env/
+venv/
+
+# Logs
+logs/
+*.log
+
+# Environment Variables
+.env
+
+# Dataset and Results
+data/*.xlsx
+results/*.csv
+
+# OS-specific files
+.DS_Store
+Thumbs.db

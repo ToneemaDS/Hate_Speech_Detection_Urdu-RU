@@ -1,0 +1,7 @@
+langchain  # Ensure compatibility with LangChain
+pandas  # For handling datasets
+scikit-learn  # For evaluation metrics
+# openai==0.27.10  # Required by LangChain
+ollama   # To integrate Ollama LLM
+pyyaml  # To parse the config.yaml file
+python-dotenv # If needed for environment variables
