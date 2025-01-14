@@ -1,0 +1,1 @@
+2024-12-14 19:34:11,254 - INFO - Evaluation Metrics for Batch 3 (Comment): {'accuracy': 0.7533333333333333, 'f1_score': np.float64(0.13953488372093023), 'precision': np.float64(0.2727272727272727), 'recall': np.float64(0.09375), 'roc_auc': np.float64(0.5129766949152542)}

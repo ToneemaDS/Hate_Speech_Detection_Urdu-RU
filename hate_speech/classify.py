@@ -22,11 +22,11 @@ def classify_comment(comment, llm, prompt_template):
         response = llm.invoke(prompt).strip()
         if "1" in response:
             return 1
-        elif "0" in response:
+        else: 
             return 0
-        else:
-            logging.warning(f"Unexpected response: {response}")
-            return 0  # Default to 0 for invalid responses
+        # else:
+        #     logging.warning(f"Unexpected response: {response}")
+        #     return 0  # Default to 0 for invalid responses
     except Exception as e:
         logging.error(f"Error during classification: {e}")
         return 0  # Default to 0 on error
