@@ -57,9 +57,13 @@ from hate_speech.evaluation import evaluate_model
 from langchain.prompts import PromptTemplate
 from hate_speech.prompts import PROMPT_TEMPLATE
 
-def process_and_evaluate_in_batches(df, column_name, classify_fn, llm, prompt_template, batch_size, toxic_column):
+import pandas as pd
+
+def process_and_evaluate_in_batches(df, column_name, classify_fn, llm, prompt_template, batch_size, toxic_column, metrics_output_path):
     predictions = []
     config = load_config()
+    metrics_list = []  # List to store metrics for each batch
+
     for i in range(0, len(df), batch_size):
         batch = df.iloc[i:i + batch_size]
         batch_predictions = batch[column_name].apply(classify_fn, args=(llm, prompt_template))
@@ -70,16 +74,31 @@ def process_and_evaluate_in_batches(df, column_name, classify_fn, llm, prompt_te
         partial_df["predicted_label"] = predictions
         metrics = evaluate_model(partial_df[toxic_column], partial_df["predicted_label"], f"{column_name} (Batch {i // batch_size + 1})")
         
+        # Append metrics to the list
+        batch_metrics = {
+            "batch_number": i // batch_size + 1,
+            "column": column_name,
+            **metrics  # Add all metric values
+        }
+        metrics_list.append(batch_metrics)
+
         # Log the metrics
         logging.info(f"Evaluation Metrics for Batch {i // batch_size + 1} ({column_name}): {metrics}")
-          # Save results
+        
+        # Save results after each batch
         output_path = config["OUTPUT_PATH"]
         partial_df.to_csv(output_path, index=False)
         logging.info(f"Results saved to {output_path}")
+
+    # Save all batch metrics to a CSV file
+    metrics_df = pd.DataFrame(metrics_list)
+    metrics_df.to_csv(metrics_output_path, index=False)
+    logging.info(f"Batch metrics saved to {metrics_output_path}")
+
     return predictions
 
-def main():
 
+def main():
     # Load configuration
     config = load_config()
     
@@ -89,22 +108,27 @@ def main():
 
     # Load dataset
     df = load_dataset(config["DATASET_PATH"])
+    df = df.dropna(how='all')
 
     # Initialize LLM
     llm = initialize_llm(config)
     prompt_template = PromptTemplate(template=PROMPT_TEMPLATE, input_variables=["comment"])
 
-    # Process and evaluate Roman Urdu comments in batches
-    logging.info("Classifying Roman Urdu comments...")
-    df["predicted_label_roman_urdu"] = process_and_evaluate_in_batches(
-        df, "Comment", classify_comment, llm, prompt_template, config["batch_size"], "Toxic"
-    )
+    # # Process and evaluate Roman Urdu comments in batches
+    # logging.info("Classifying Roman Urdu comments...")
+    # roman_metrics_path = "roman_urdu_batch_metrics.csv"
+    # df["predicted_label_roman_urdu"] = process_and_evaluate_in_batches(
+    #     df, "Comment", classify_comment, llm, prompt_template, config["batch_size"], "Toxic", roman_metrics_path
+    # )
 
     # Process and evaluate Urdu comments in batches
     logging.info("Classifying Urdu comments...")
+    urdu_metrics_path = "urdu_batch_metrics.csv"
     df["predicted_label_urdu"] = process_and_evaluate_in_batches(
-        df, "Urdu", classify_comment, llm, prompt_template, config["batch_size"], "Toxic"
+        df, "Urdu", classify_comment, llm, prompt_template, config["batch_size"], "Toxic", urdu_metrics_path
     )
+
+
 
     # # Save results
     # output_path = config["OUTPUT_PATH"]
